@@ -11,7 +11,7 @@ import Place from "./places/pages/Place";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 
 const App = () => {
-  return (
+ return (
     <Router>
       <MainNavigation />
       <main>
@@ -32,3 +32,4 @@ const App = () => {
 };
 
 export default App;
+ 
