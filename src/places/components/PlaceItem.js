@@ -1,11 +1,21 @@
 import React from "react";
+import { useState } from "react";
 
 import "./PlaceItem.css";
 import Card from '../../shared/components/UIElements/Card'
 import Button from '../../shared/components/FormElements/Button'
 
 const PlaceItem = (props) => {
-  return (
+    const [showMap, setShowMap] = useState(false);
+
+    const showMapHandler = () => {
+        setShowMap(true);
+    }
+    const closeMapHandler = () => {
+        setShowMap(false);
+    }
+    
+    return (
     <li className="place-item">
         <Card className="place-item__content">
             <div className="place-item__image">
