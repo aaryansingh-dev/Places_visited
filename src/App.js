@@ -26,7 +26,9 @@ const App = () => {
             <NewPlace />
           </Route>
 
-          <Route
+          <Route path='/:uid/places' exact>
+            <UserPlaces />
+          </Route>
           
           <Redirect to="/" />
         </Switch>
