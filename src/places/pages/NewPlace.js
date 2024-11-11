@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Place =() =>{
+const NewPlace =() =>{
     return (
         <h2>Place works</h2>
     );
 }
 
-export default Place;
+export default NewPlace;
