@@ -30,9 +30,9 @@ const Input = (props) => {
   // needs a reducer ->  reducer is a function, which recieves an action and dispatches that action
   // updates the current state
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
+    value: props.value || '',
     isTouched: false,
-    isValid: false,
+    isValid: props.valid || false,
   });
 
   const changeHandler = (event) => {
