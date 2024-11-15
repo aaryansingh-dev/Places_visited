@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from 'react-router-dom';
+
+
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import {VALIDATOR_REQUIRE, VALIDATOR_MAXLENGTH, VALIDATOR_MINLENGTH} from '../../shared/util/validators'
-
 import './PlaceForm.css'
+import { useForm } from "../../shared/hooks/form-hook";
+import Card from '../../shared/components/UIElements/Card'
 
 const dummyPlaces = [
     {
@@ -18,7 +21,7 @@ const dummyPlaces = [
     },
     {
         id: "p2",
-        title:"Empire State Building",
+        title:"Em. State Building",
         description:"One of the most famous buildings in the world",
         imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg',
         address:"20 W 34th St., New York, NY 10001, United States",
@@ -28,20 +31,50 @@ const dummyPlaces = [
 ];
 
 
-const UpdatePlace = props => {
+const UpdatePlace = props => { 
+    
+    const [isLoading, setIsLoading] = useState(true)
 
     const placeId = useParams().placeId;
 
+    const [formState, inputHandler, setFormData] = useForm({
+        title: {value:'', isValid: false},
+        description: {value:'', isValid:false},
+    }, false)
+
     const place = dummyPlaces.find(p => p.id === placeId);
+
+    useEffect(() => {
+        if(place){
+            setFormData({
+                title:{value:place.title, isValid:true},
+                description:{value: place.description, isValid: true}
+            }, true);
+        }
+        setIsLoading(false);
+    }, [setFormData, place]);
 
     if(!place){
         return <div className="center">
+             <Card>
              <h2>Could not find a place with this id.</h2>
+             </Card>
         </div>
        
     }
+
+    const placeUpdateSubmitHandler = event => {
+        event.preventDefault();
+        console.log('Form updated', formState)
+    }
+
+    if(isLoading){
+        return <div className="center">
+             <h2>Loading</h2>
+        </div>
+    }
     return (
-        <form className="place-form">
+        <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
             <Input
             id = 'title'
             element='input'
@@ -49,9 +82,9 @@ const UpdatePlace = props => {
             label='Title'
             validators ={[VALIDATOR_REQUIRE()]}
             errorText = "Please enter a valid Title"
-            onInput={() => {}}
-            value={place.title}
-            valid={true}>
+            onInput={inputHandler}
+            value={formState.inputs.title.value}
+            valid={formState.inputs.title.isValid}>
             </Input>
 
             <Input
@@ -59,19 +92,16 @@ const UpdatePlace = props => {
             element='textarea'
             label='Description'
             validators ={[VALIDATOR_MINLENGTH(5), VALIDATOR_MAXLENGTH(100)]}
-            onInput={() => {}}
-            value={place.description}
-            valid={true}
+            onInput={inputHandler}
+            value={formState.inputs.description.value}
+            valid={formState.inputs.description.isValid}
             errorText='Please enter a valid description'>
             </Input>
 
-            <Button type='submit' disabled={true}>
-               UPDATE PLACE
+            <Button type='submit' disabled={!formState.isValid}>
+                UPDATE PLACE
             </Button>
-        </form>
-    );
-
-
+        </form>)
 };
 
 export default UpdatePlace;

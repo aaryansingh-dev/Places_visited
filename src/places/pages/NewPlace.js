@@ -4,17 +4,18 @@ import "./PlaceForm.css";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button"
 import {VALIDATOR_MAXLENGTH, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE} from '../../shared/util/validators'
+import { useForm } from "../../shared/hooks/form-hook";
 
 
 const NewPlace = (props) => {
 
-    const inputHandler = useCallback((id, value, isValid) => {
-        dispatch({type:'INPUT_CHANGE', 
-            value: value, 
-            isValid: isValid, 
-            inputId: id});
-    }, [dispatch]);
+    const [formState, inputHandler] = useForm({
+        title: {value: '', isValid: false},
+        description: {value: '', isValid: false},
+        address: {value:'', isValid:false}
+    }, false);
 
+    
     const placeSubmitHandler = event => {
         event.preventDefault();
         // send data to server
