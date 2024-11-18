@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import { useContext } from "react";
 
 import  {useForm} from '../../shared/hooks/form-hook'
 import Button from '../../shared/components/FormElements/Button'
@@ -6,8 +7,11 @@ import Input from '../../shared/components/FormElements/Input'
 import Card from '../../shared/components/UIElements/Card'
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE} from "../../shared/util/validators";
 import './Auth.css'
+import { AuthContext } from "../../shared/context/auth-context";
 
 const Auth = () => {
+
+    const auth = useContext(AuthContext);
 
     // signup or login state
     const [loginState, switchLoginState] = useState(true);
@@ -24,7 +28,7 @@ const Auth = () => {
         if(loginState){
             console.log('Data Submitted', formState)
         }
-
+        auth.login();
     }
 
     // function to switch modes
