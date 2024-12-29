@@ -28,11 +28,33 @@ const Auth = () => {
 
     // when the form is submitted
     const onSubmitHandler = async event => {
-        event.preventDefault()
+        event.preventDefault();
+        setIsLoading(true);
         if (loginState) {
+            try {
+                const response = await fetch('http://localhost:3002/api/users/login', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    email: formState.inputs.email.value,
+                    password: formState.inputs.password.value
+                  })
+                });
+        
+                const responseData = await response.json();
+                if (!response.ok) {
+                  throw new Error(responseData.message);
+                }
+                setIsLoading(false);
+                auth.login();
+              } catch (err) {
+                setIsLoading(false);
+                setError(err.message || 'Something went wrong, please try again.');
+              }
         } else {
           try {
-            setIsLoading(true);
             const response = await fetch('http://localhost:3002/api/users/signup', {
               method: 'POST',
               headers: {
@@ -49,16 +71,13 @@ const Auth = () => {
             if (!response.ok) {
                 throw new Error(responseData.message);
             }
-            console.log(responseData);
             setIsLoading(false);
             auth.login();
           } catch (err) {
-            console.log(err);
             setIsLoading(false);
             setError(err.message || 'Something went wrong, please try again.');
           }
         }
-        auth.login();
     }
 
     // function to switch modes
