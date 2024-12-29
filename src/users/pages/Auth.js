@@ -46,6 +46,9 @@ const Auth = () => {
             });
     
             const responseData = await response.json();
+            if (!response.ok) {
+                throw new Error(responseData.message);
+            }
             console.log(responseData);
             setIsLoading(false);
             auth.login();
@@ -77,8 +80,13 @@ const Auth = () => {
         }
         switchLoginState(prevMode => !prevMode)
     }
+    const errorHandler = () => {
+        setError(null);
+      };
 
     return(
+        <React.Fragment>
+        <ErrorModal error={error} onClear={errorHandler} />
         <Card className='authentication'>
             {isLoading && <LoadingSpinner asOverlay />}
             <h2 className="authentication-header">
@@ -120,6 +128,7 @@ const Auth = () => {
             <Button inverse onClick={switchModeHandler}>{loginState ? 'SWITCH TO SIGN UP': 'SWITCH TO LOGIN'}</Button>
             
         </Card>
+    </React.Fragment>
     );
 };
 
