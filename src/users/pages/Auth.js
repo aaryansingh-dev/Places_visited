@@ -23,10 +23,28 @@ const Auth = () => {
     }, false);
 
     // when the form is submitted
-    const onSubmitHandler = event => {
+    const onSubmitHandler = async event => {
         event.preventDefault()
-        if(loginState){
-            console.log('Data Submitted', formState)
+        if (isLoginMode) {
+        } else {
+          try {
+            const response = await fetch('http://localhost:3002/api/users/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                name: formState.inputs.name.value,
+                email: formState.inputs.email.value,
+                password: formState.inputs.password.value
+              })
+            });
+    
+            const responseData = await response.json();
+            console.log(responseData);
+          } catch (err) {
+            console.log(err);
+          }
         }
         auth.login();
     }
