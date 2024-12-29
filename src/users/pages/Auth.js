@@ -121,7 +121,7 @@ const Auth = () => {
                 label='Password'
                 errorText='Please enter a valid password. Min length is 3.'
                 onInput={inputHandler}
-                validators= {[VALIDATOR_MINLENGTH(3)]}>
+                validators= {[VALIDATOR_MINLENGTH(6)]}>
                 </Input>
 
                 <Button type='submit' disabled={!formState.isValid}>{loginState ? 'LOGIN': 'SIGN UP'}</Button>
