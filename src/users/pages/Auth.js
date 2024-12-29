@@ -5,6 +5,8 @@ import  {useForm} from '../../shared/hooks/form-hook'
 import Button from '../../shared/components/FormElements/Button'
 import Input from '../../shared/components/FormElements/Input'
 import Card from '../../shared/components/UIElements/Card'
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE} from "../../shared/util/validators";
 import './Auth.css'
 import { AuthContext } from "../../shared/context/auth-context";
@@ -15,6 +17,8 @@ const Auth = () => {
 
     // signup or login state
     const [loginState, switchLoginState] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
 
     // state handling for Login and signupform
     const [formState, inputHandler, setDataHandler] = useForm({
@@ -25,9 +29,10 @@ const Auth = () => {
     // when the form is submitted
     const onSubmitHandler = async event => {
         event.preventDefault()
-        if (isLoginMode) {
+        if (loginState) {
         } else {
           try {
+            setIsLoading(true);
             const response = await fetch('http://localhost:3002/api/users/signup', {
               method: 'POST',
               headers: {
@@ -42,8 +47,12 @@ const Auth = () => {
     
             const responseData = await response.json();
             console.log(responseData);
+            setIsLoading(false);
+            auth.login();
           } catch (err) {
             console.log(err);
+            setIsLoading(false);
+            setError(err.message || 'Something went wrong, please try again.');
           }
         }
         auth.login();
@@ -71,6 +80,7 @@ const Auth = () => {
 
     return(
         <Card className='authentication'>
+            {isLoading && <LoadingSpinner asOverlay />}
             <h2 className="authentication-header">
             {loginState ? 'LOGIN': 'SIGN UP'}
             </h2>
