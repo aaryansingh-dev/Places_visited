@@ -6,7 +6,7 @@ import {
   Switch,
 } from "react-router-dom";
 import {useState, useCallback} from 'react';
-import React from "react";
+import React, {useEffect} from "react";
 
 import Users from "./users/pages/Users";
 import UserPlaces from "./places/pages/UserPlaces";
@@ -16,20 +16,56 @@ import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./users/pages/Auth";
 import { AuthContext } from "./shared/context/auth-context";
 
+let logoutTimer;
+
 const App = () => {
 
   const [token, setToken] = useState(false);
   const [userId, setUserId] = useState(false);
+  const [tokenExpirationDate, setTokenExpirationDate] = useState();
 
-  const login = useCallback((uid, token) => {
+  const login = useCallback((uid, token, expirationDate) => {
     setToken(true);
     setUserId(uid);
+    const tokenExpirationDate =
+    expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
+    setTokenExpirationDate(tokenExpirationDate);
+    localStorage.setItem(
+      'userData',
+      JSON.stringify({
+        userId: uid,
+        token: token,
+        expiration: tokenExpirationDate.toISOString()
+      })
+    );
   }, []);
 
   const logout = useCallback(() => {
     setToken(false);
+    setTokenExpirationDate(null);
     setUserId(null);
+    localStorage.removeItem('userData');
   }, []);
+
+  useEffect(() => {
+    if (token && tokenExpirationDate) {
+      const remainingTime = tokenExpirationDate.getTime() - new Date().getTime();   // calculate remaining time
+      logoutTimer = setTimeout(logout, remainingTime);    // set timer to end the active session
+    } else {
+      clearTimeout(logoutTimer);
+    }
+  }, [token, logout, tokenExpirationDate]);
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem('userData'));
+    if (
+      storedData &&
+      storedData.token &&
+      new Date(storedData.expiration) > new Date()
+    ) {
+      login(storedData.userId, storedData.token, new Date(storedData.expiration));
+    }
+  }, [login]);
 
   let routes;
 
