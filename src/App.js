@@ -17,8 +17,6 @@ import Auth from "./users/pages/Auth";
 import { AuthContext } from "./shared/context/auth-context";
 import { useAuth } from './shared/hooks/auth-hook';
 
-let logoutTimer;
-
 const App = () => {
   const { token, login, logout, userId } = useAuth();
   let routes;
