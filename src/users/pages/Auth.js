@@ -11,6 +11,7 @@ import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE} from "../../sh
 import './Auth.css'
 import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from '../../shared/hooks/http-hook';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 
 const Auth = () => {
 
@@ -95,15 +96,16 @@ const Auth = () => {
             {loginState ? 'LOGIN': 'SIGN UP'}
             </h2>
             <form onSubmit={onSubmitHandler}>
+              {!loginState && <Input 
+                  id='name'
+                  element='input'
+                  type='text'
+                  label='Name'
+                  errorText='Please enter a valid Name.'
+                  validators = {[VALIDATOR_REQUIRE()]}
+                  onInput={inputHandler}/>}
 
-                {!loginState && <Input 
-                    id='name'
-                    element='input'
-                    type='text'
-                    label='Name'
-                    errorText='Please enter a valid Name.'
-                    validators = {[VALIDATOR_REQUIRE()]}
-                    onInput={inputHandler}/>}
+                {!loginState && <ImageUpload center id="image" />}
 
                 <Input 
                 id='email'
