@@ -12,6 +12,7 @@ import { useContext } from "react";
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 
+
 const PlaceItem = (props) => {
   
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -39,7 +40,11 @@ const PlaceItem = (props) => {
     try {
       await sendRequest(
         `http://localhost:5000/api/places/${props.id}`,
-        'DELETE'
+        'DELETE',
+        null,
+        {
+          Authorization: 'Bearer ' + auth.token
+        }
       );
       props.onDelete(props.id);
     } catch (err) {}
