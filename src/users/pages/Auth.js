@@ -43,7 +43,7 @@ const Auth = () => {
                   'Content-Type': 'application/json'
                 }
               );
-              auth.login();
+              auth.login(responseData.user.id);
               } catch (err) {
               }
         } else {
@@ -75,13 +75,18 @@ const Auth = () => {
                 name: {
                     value:'',
                     isValid: false
+                },
+                image: {
+                  value: null,
+                  isValid: false
                 }
             }, false)
         }
         else{
             setDataHandler({
                 ...formState.inputs,
-                name:undefined
+                name:undefined,
+                image: undefined
             }, formState.inputs.email.isValid && formState.inputs.password.isValid)
         }
         switchLoginState(prevMode => !prevMode)
@@ -105,7 +110,7 @@ const Auth = () => {
                   validators = {[VALIDATOR_REQUIRE()]}
                   onInput={inputHandler}/>}
 
-                {!loginState && <ImageUpload center id="image" />}
+                {!loginState && <ImageUpload center id="image" onInput={inputHandler}/>}
 
                 <Input 
                 id='email'
