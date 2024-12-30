@@ -6,6 +6,8 @@ import Avatar from "../../shared/components/UIElements/Avatar";
 import Card from "../../shared/components/UIElements/Card";
 
 const UserItem = props => {
+    console.log('Props.id: ');
+    console.log(props.id);
     return (
         <li className="user-item">
             <Card className="user-item__content">
